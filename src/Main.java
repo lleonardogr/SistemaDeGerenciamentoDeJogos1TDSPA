@@ -1,9 +1,10 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        var jogos = new ArrayList<String>();
+        var colecao = new ArrayList<Jogo>();
 
         while (true) {
             System.out.printf("""
@@ -22,17 +23,30 @@ public class Main {
                 System.exit(0);
             else if (opcao == 1) {
                 System.out.println("Digite o nome do jogo:");
-                jogos.add(scan.nextLine());
+                var nome = scan.nextLine();
+                System.out.println("Digite a plataforma do jogo:");
+                var plataforma = scan.nextLine();
+                System.out.println("Digite a data de lançamento do jogo (YYYY-MM-DD)");
+                var dataLancamento = scan.nextLine();
+
+                var jogo = new Jogo();
+                jogo.nome = nome;
+                jogo.plataforma = plataforma;
+                jogo.dataLancamento = LocalDate.parse(dataLancamento);
+
+                colecao.add(jogo);
             } else if (opcao == 2) {
                 System.out.println("Digite o numero do jogo a ser removido:");
                 var index = scan.nextInt();
-                if(index >= 0 && index < jogos.size())
-                    jogos.remove(index);
+                if(index >= 0 && index < colecao.size())
+                    colecao.remove(index);
                 else
                     System.out.println("Índice inválido!");
             } else if (opcao == 3) {
                 System.out.println("Jogos cadastrados: ");
-                jogos.forEach(System.out::println);
+                var index = 0;
+                for(var jogo : colecao)
+                    System.out.println((index++) + " - " + jogo);
             } else
                 System.out.println("Opção inválida!");
         }
