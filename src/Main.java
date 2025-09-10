@@ -1,58 +1,68 @@
 import entities.Conteudo;
-import entities.Jogo;
 import services.JogoService;
+import services.SerieService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        var colecao = new ArrayList<Conteudo>();
-        var jogoService = new JogoService();
+import static utils.IOUtils.scanInt;
+import static utils.StringUtils.print;
 
-        while (true) {
-            System.out.println("Bem vindo ao sistema de gerenciamento de Conteúdos!");
-            System.out.println("""
+public class Main {
+
+    public static final String MENU_PRINCIPAL = """
                     Digite o tipo de conteúdo que deseja gerenciar:
+                    0 - Sair
                     1 - Jogos
                     2 - Séries
                     3 - Filmes
-                    """);
-            var scan = new Scanner(System.in);
-            var opcaoConteudo = scan.nextInt();
-            scan.nextLine();
-            if (opcaoConteudo == 1) {
-                System.out.println("-----------------------------------");
-                System.out.printf("""
-                        Escolha uma opção:
-                        1 - Adicionar jogo
-                        2 - Remover jogo
-                        3 - Listar jogos
-                        0 - Sair
-                        """);
+                    """;
 
-                var opcao = scan.nextInt();
-                scan.nextLine();
+    public static void main(String[] args) {
+        var colecao = new ArrayList<Conteudo>();
 
-                if (opcao == 0)
-                    System.exit(0);
-                else if (opcao == 1) {
-                    jogoService.AdicionarJogo(scan, colecao);
-                } else if (opcao == 2) {
-                    System.out.println("Digite o numero do jogo a ser removido:");
-                    var index = scan.nextInt();
-                    if (index >= 0 && index < colecao.size())
-                        colecao.remove(index);
-                    else
-                        System.out.println("Índice inválido!");
-                } else if (opcao == 3) {
-                    System.out.println("Jogos cadastrados: ");
-                    var index = 0;
-                    for (var jogo : colecao)
-                        System.out.println((index++) + " - " + jogo);
-                } else
-                    System.out.println("Opção inválida!");
+        var jogoService = new JogoService();
+        var serieService = new SerieService();
+
+        var scan = new Scanner(System.in);
+
+        while (true) {
+            print("Bem vindo ao sistema de gerenciamento de Conteúdos!");
+            print(MENU_PRINCIPAL);
+
+            var opcao = scanInt(scan);
+
+            switch (opcao) {
+                case 0 -> System.exit(0);
+                case 1 -> {
+                    var loop = true;
+                    while (loop) {
+                        print("-----------------------------------");
+                        print(jogoService.MENU_JOGOS);
+                        opcao = scanInt(scan);
+
+                        switch (opcao) {
+                            case 0 -> loop = false;
+                            case 1 -> jogoService.AdicionarJogo(scan, colecao);
+                            case 2 -> jogoService.RemoverJogo(scan, colecao);
+                            case 3 -> jogoService.ListarJogos(colecao);
+                            default -> print("Opção inválida!");
+                        }
+                    }
+                }
+                case 2 -> {
+                    var loop = true;
+                    while (loop) {
+                        print("-----------------------------------");
+                        print(serieService.MENU_SERIE);
+                        opcao = scanInt(scan);
+
+                        switch (opcao) {
+                            case 0 -> loop = false;
+                            default -> print("Opção inválida!");
+                        }
+                    }
+                }
             }
         }
     }
