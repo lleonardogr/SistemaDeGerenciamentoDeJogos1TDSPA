@@ -46,6 +46,8 @@ public class Main {
                             case 1 -> jogoService.AdicionarJogo(scan, colecao);
                             case 2 -> jogoService.RemoverJogo(scan, colecao);
                             case 3 -> jogoService.ListarJogos(colecao);
+                            case 4 -> jogoService.AvaliarJogo(scan, colecao);
+                            case 5 -> jogoService.ListarAvaliacoes(scan, colecao);
                             default -> print("Opção inválida!");
                         }
                     }

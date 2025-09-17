@@ -1,7 +1,9 @@
 package services;
 
+import entities.Avaliacao;
 import entities.Conteudo;
 import entities.Jogo;
+import utils.IOUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +18,8 @@ public class JogoService {
                         1 - Adicionar jogo
                         2 - Remover jogo
                         3 - Listar jogos
+                        4 - Avaliar jogo
+                        5 - Listar avaliações de um jogo
                         0 - Voltar
                         ----------------------------
                         """;
@@ -45,10 +49,42 @@ public class JogoService {
             print("Índice inválido!");
     }
 
+    public void AvaliarJogo(Scanner scan, List<Conteudo> colecao){
+        print("Digite o número do jogo a ser avaliado:");
+        var index = IOUtils.scanInt(scan);
+        var jogo = (Jogo) colecao.get(index);
+
+        print("Digite o seu nome de usuário: ");
+        var usuario = scan.nextLine();
+
+        print("Digite a nota (0 a 10): ");
+        var nota = IOUtils.scanInt(scan);
+
+        print("Digite um comentário (Opcional):");
+        var comentario = scan.nextLine();
+
+        var avaliacao = new Avaliacao();
+        avaliacao.nomeUsuario = usuario;
+        avaliacao.nota = nota;
+        avaliacao.comentario = comentario;
+
+        jogo.avaliacoes.add(avaliacao);
+        jogo.recalcularMediaAvaliacoes();
+    }
+
     public void ListarJogos(List<Conteudo> colecao){
         print("Jogos cadastrados: ");
         var index = 0;
         for (var jogo : colecao)
             print((index++) + " - " + jogo);
+    }
+
+    public void ListarAvaliacoes(Scanner scan, List<Conteudo> colecao){
+        print("Digite o número do jogo para ver as avaliações dele:");
+        var index = IOUtils.scanInt(scan);
+        var jogo = (Jogo) colecao.get(index);
+
+        for(var avaliacao : jogo.avaliacoes)
+            print(avaliacao.toString());
     }
 }
