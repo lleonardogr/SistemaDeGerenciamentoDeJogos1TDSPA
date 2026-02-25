@@ -3,6 +3,7 @@ package services;
 import entities.Avaliacao;
 import entities.Conteudo;
 import entities.Jogo;
+import enums.PLATAFORMA_JOGO;
 import utils.IOUtils;
 
 import java.time.LocalDate;
@@ -28,7 +29,15 @@ public class JogoService {
         print("Digite o nome do jogo:");
         var nome = scan.nextLine();
         print("Digite a plataforma do jogo:");
-        var plataforma = scan.nextLine();
+        print("""
+                1 - PC,
+                2 - PLAYSTATION,
+                3 - XBOX,
+                4 - NINTENDO,
+                5 - MOBILE,
+                6 - VR
+                """);
+        var plataforma = PLATAFORMA_JOGO.values()[IOUtils.scanInt(scan) -1];
         print("Digite a data de lançamento do jogo (YYYY-MM-DD)");
         var dataLancamento = scan.nextLine();
 
@@ -59,13 +68,17 @@ public class JogoService {
 
         print("Digite a nota (0 a 10): ");
         var nota = IOUtils.scanInt(scan);
+        while(nota > 10 || nota < 0){
+            print("Nota inválida! Digite uma nota entre 0 e 10:");
+            nota = IOUtils.scanInt(scan);
+        }
 
         print("Digite um comentário (Opcional):");
         var comentario = scan.nextLine();
 
         var avaliacao = new Avaliacao();
         avaliacao.nomeUsuario = usuario;
-        avaliacao.nota = nota;
+        avaliacao.setNota(nota);
         avaliacao.comentario = comentario;
 
         jogo.avaliacoes.add(avaliacao);

@@ -1,4 +1,6 @@
-import entities.Conteudo;
+import entities.*;
+import enums.MENU_INICIAL;
+import enums.MENU_JOGO;
 import services.JogoService;
 import services.SerieService;
 
@@ -26,40 +28,41 @@ public class Main {
 
         var scan = new Scanner(System.in);
 
+
         while (true) {
             print("Bem vindo ao sistema de gerenciamento de Conteúdos!");
             print(MENU_PRINCIPAL);
 
-            var opcao = scanInt(scan);
+            var opcao = MENU_INICIAL.values()[scanInt(scan)];
 
             switch (opcao) {
-                case 0 -> System.exit(0);
-                case 1 -> {
+                case MENU_INICIAL.SAIR -> System.exit(0);
+                case MENU_INICIAL.JOGO -> {
                     var loop = true;
                     while (loop) {
                         print("-----------------------------------");
                         print(jogoService.MENU_JOGOS);
-                        opcao = scanInt(scan);
+                        var opcaoJogo = MENU_JOGO.values()[scanInt(scan)];
 
-                        switch (opcao) {
-                            case 0 -> loop = false;
-                            case 1 -> jogoService.AdicionarJogo(scan, colecao);
-                            case 2 -> jogoService.RemoverJogo(scan, colecao);
-                            case 3 -> jogoService.ListarJogos(colecao);
-                            case 4 -> jogoService.AvaliarJogo(scan, colecao);
-                            case 5 -> jogoService.ListarAvaliacoes(scan, colecao);
+                        switch (opcaoJogo) {
+                            case MENU_JOGO.VOLTAR -> loop = false;
+                            case MENU_JOGO.ADICIONAR_JOGO -> jogoService.AdicionarJogo(scan, colecao);
+                            case MENU_JOGO.REMOVER_JOGO -> jogoService.RemoverJogo(scan, colecao);
+                            case MENU_JOGO.LISTAR_JOGOS -> jogoService.ListarJogos(colecao);
+                            case MENU_JOGO.AVALIAR_JOGO -> jogoService.AvaliarJogo(scan, colecao);
+                            case MENU_JOGO.LISTAR_AVALIACOES_JOGO -> jogoService.ListarAvaliacoes(scan, colecao);
                             default -> print("Opção inválida!");
                         }
                     }
                 }
-                case 2 -> {
+                case MENU_INICIAL.SERIE -> {
                     var loop = true;
                     while (loop) {
                         print("-----------------------------------");
                         print(serieService.MENU_SERIE);
-                        opcao = scanInt(scan);
+                        var opcaoSerie = scanInt(scan);
 
-                        switch (opcao) {
+                        switch (opcaoSerie) {
                             case 0 -> loop = false;
                             default -> print("Opção inválida!");
                         }

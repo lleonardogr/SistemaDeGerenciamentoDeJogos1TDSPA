@@ -1,0 +1,10 @@
+package enums;
+
+public enum MENU_JOGO {
+    VOLTAR,
+    ADICIONAR_JOGO,
+    REMOVER_JOGO,
+    LISTAR_JOGOS,
+    AVALIAR_JOGO,
+    LISTAR_AVALIACOES_JOGO
+}
