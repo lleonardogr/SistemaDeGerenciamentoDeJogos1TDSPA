@@ -4,13 +4,12 @@ import entities.Avaliacao;
 import entities.Conteudo;
 import entities.Jogo;
 import enums.PLATAFORMA_JOGO;
-import utils.IOUtils;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
 
-import static utils.StringUtils.print;
+import static java.lang.IO.println;
+import static java.lang.IO.readln;
 
 public class JogoService {
 
@@ -25,11 +24,11 @@ public class JogoService {
                         ----------------------------
                         """;
 
-    public void AdicionarJogo(Scanner scan, List<Conteudo> colecao){
-        print("Digite o nome do jogo:");
-        var nome = scan.nextLine();
-        print("Digite a plataforma do jogo:");
-        print("""
+    public void AdicionarJogo(List<Conteudo> colecao){
+        println("Digite o nome do jogo:");
+        var nome = readln();
+        println("Digite a plataforma do jogo:");
+        println("""
                 1 - PC,
                 2 - PLAYSTATION,
                 3 - XBOX,
@@ -37,9 +36,9 @@ public class JogoService {
                 5 - MOBILE,
                 6 - VR
                 """);
-        var plataforma = PLATAFORMA_JOGO.values()[IOUtils.scanInt(scan) -1];
-        print("Digite a data de lançamento do jogo (YYYY-MM-DD)");
-        var dataLancamento = scan.nextLine();
+        var plataforma = PLATAFORMA_JOGO.values()[Integer.parseInt(IO.readln()) -1];
+        println("Digite a data de lançamento do jogo (YYYY-MM-DD)");
+        var dataLancamento = readln();
 
         var jogo = new Jogo();
         jogo.nome = nome;
@@ -49,32 +48,32 @@ public class JogoService {
         colecao.add(jogo);
     }
 
-    public void RemoverJogo(Scanner scan, List<Conteudo> colecao){
-        print("Digite o numero do jogo a ser removido:");
-        var index = scan.nextInt();
+    public void RemoverJogo(List<Conteudo> colecao){
+        println("Digite o numero do jogo a ser removido:");
+        var index = Integer.parseInt(IO.readln());
         if (index >= 0 && index < colecao.size())
             colecao.remove(index);
         else
-            print("Índice inválido!");
+            println("Índice inválido!");
     }
 
-    public void AvaliarJogo(Scanner scan, List<Conteudo> colecao){
-        print("Digite o número do jogo a ser avaliado:");
-        var index = IOUtils.scanInt(scan);
+    public void AvaliarJogo(List<Conteudo> colecao){
+        println("Digite o número do jogo a ser avaliado:");
+        var index = Integer.parseInt(IO.readln());
         var jogo = (Jogo) colecao.get(index);
 
-        print("Digite o seu nome de usuário: ");
-        var usuario = scan.nextLine();
+        println("Digite o seu nome de usuário: ");
+        var usuario = readln();
 
-        print("Digite a nota (0 a 10): ");
-        var nota = IOUtils.scanInt(scan);
+        println("Digite a nota (0 a 10): ");
+        var nota = Integer.parseInt(IO.readln());
         while(nota > 10 || nota < 0){
-            print("Nota inválida! Digite uma nota entre 0 e 10:");
-            nota = IOUtils.scanInt(scan);
+            println("Nota inválida! Digite uma nota entre 0 e 10:");
+            nota = Integer.parseInt(IO.readln());
         }
 
-        print("Digite um comentário (Opcional):");
-        var comentario = scan.nextLine();
+        println("Digite um comentário (Opcional):");
+        var comentario = readln();
 
         var avaliacao = new Avaliacao();
         avaliacao.nomeUsuario = usuario;
@@ -86,18 +85,18 @@ public class JogoService {
     }
 
     public void ListarJogos(List<Conteudo> colecao){
-        print("Jogos cadastrados: ");
+        println("Jogos cadastrados: ");
         var index = 0;
         for (var jogo : colecao)
-            print((index++) + " - " + jogo);
+            println((index++) + " - " + jogo);
     }
 
-    public void ListarAvaliacoes(Scanner scan, List<Conteudo> colecao){
-        print("Digite o número do jogo para ver as avaliações dele:");
-        var index = IOUtils.scanInt(scan);
+    public void ListarAvaliacoes(List<Conteudo> colecao){
+        println("Digite o número do jogo para ver as avaliações dele:");
+        var index = Integer.parseInt(IO.readln());
         var jogo = (Jogo) colecao.get(index);
 
         for(var avaliacao : jogo.avaliacoes)
-            print(avaliacao.toString());
+            println(avaliacao.toString());
     }
 }
