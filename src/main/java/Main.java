@@ -27,13 +27,14 @@
 
             try {
                 var conn = DatabaseConfig.getConnection();
-                DatabaseConfig.Initialize();
                 logger.info("Banco de dados conectado e inicializado");
             } catch (SQLException e) {
                 e.printStackTrace();
                 logger.fatal("Erro ao conectar ao banco de dados");
                 System.exit(-1);
             }
+
+            DatabaseConfig.Initialize();
 
             var colecao = new ArrayList<Conteudo>();
 
@@ -69,9 +70,10 @@
                                 }
                                 case MENU_JOGO.ADICIONAR_JOGO -> jogoService.AdicionarJogo(colecao);
                                 case MENU_JOGO.REMOVER_JOGO -> jogoService.RemoverJogo(colecao);
-                                case MENU_JOGO.LISTAR_JOGOS -> jogoService.ListarJogos(colecao);
+                                case MENU_JOGO.LISTAR_JOGOS -> jogoService.ListarJogos();
                                 case MENU_JOGO.AVALIAR_JOGO -> jogoService.AvaliarJogo(colecao);
                                 case MENU_JOGO.LISTAR_AVALIACOES_JOGO -> jogoService.ListarAvaliacoes(colecao);
+                                case MENU_JOGO.BUSCAR_JOGO_POR_ID -> jogoService.BuscarJogoPorId();
                                 default -> {
                                     logger.warn("Opção inválida selecionada: {}", opcaoJogo);
                                     IO.println("Opção inválida!");

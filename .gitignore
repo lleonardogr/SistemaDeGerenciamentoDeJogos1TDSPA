@@ -34,3 +34,6 @@ target/
 ### Log files ###
 *.log
 logs/
+
+### Database properties ###
+*.properties

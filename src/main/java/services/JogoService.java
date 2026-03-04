@@ -4,10 +4,13 @@ import entities.Avaliacao;
 import entities.Conteudo;
 import entities.Jogo;
 import enums.PLATAFORMA_JOGO;
+import infra.DatabaseConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.IO.println;
@@ -23,6 +26,7 @@ public class JogoService {
                         3 - Listar jogos
                         4 - Avaliar jogo
                         5 - Listar avaliações de um jogo
+                        6 - Buscar jogo por ID
                         0 - Voltar
                         ----------------------------
                         """;
@@ -100,10 +104,27 @@ public class JogoService {
         logger.debug("Nova média do jogo: {}", jogo.getMediaAvaliacoes());
     }
 
-    public void ListarJogos(List<Conteudo> colecao){
+    public void ListarJogos(){
         logger.info("Listando jogos cadastrados");
         println("Jogos cadastrados: ");
         var index = 0;
+        var colecao = new ArrayList<Jogo>();
+
+        try (var conn = DatabaseConfig.getConnection()) {
+            var stmt = conn.prepareStatement("SELECT * FROM JOGO");
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                var jogo = new Jogo();
+                jogo.nome = rs.getString("nome");
+                jogo.dataLancamento = rs.getDate("data_lancamento").toLocalDate();
+                jogo.plataforma = PLATAFORMA_JOGO.valueOf(rs.getString("plataforma"));
+                colecao.add(jogo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.error("Erro ao listar jogos do banco de dados", e);
+        }
+
         for (var jogo : colecao)
             println((index++) + " - " + jogo);
         logger.debug("Total de jogos listados: {}", colecao.size());
@@ -119,5 +140,33 @@ public class JogoService {
         for(var avaliacao : jogo.avaliacoes)
             println(avaliacao.toString());
         logger.debug("Total de avaliações exibidas: {}", jogo.avaliacoes.size());
+    }
+
+    public void BuscarJogoPorId() {
+        Jogo jogo;
+        logger.info("Buscando jogo por ID");
+        println("Digite o ID do jogo:");
+        var id = Integer.parseInt(IO.readln());
+        try(var conn = DatabaseConfig.getConnection()){
+            var stmt = conn.prepareStatement("SELECT * FROM JOGO WHERE ID = ?");
+            stmt.setInt(1, id);
+            var rs = stmt.executeQuery();
+            if(rs.next()){
+                jogo = new Jogo();
+                jogo.nome = rs.getString("nome");
+                jogo.dataLancamento = rs.getDate("data_lancamento").toLocalDate();
+                jogo.plataforma = PLATAFORMA_JOGO.valueOf(rs.getString("plataforma"));
+                println(jogo);
+                logger.info("Jogo encontrado: {}", jogo.nome);
+            }
+            else {
+                println("Jogo não encontrado!");
+                logger.warn("Nenhum jogo encontrado com ID: {}", id);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            logger.error("Erro ao buscar jogo por ID no banco de dados", e);
+        }
     }
 }
