@@ -37,3 +37,6 @@ logs/
 
 ### Database properties ###
 *.properties
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/test/resources/database.properties
