@@ -16,7 +16,7 @@ public class DatabaseConfig {
     public static void Initialize() {
         var sql = """
                 CREATE TABLE jogo (
-                 id NUMBER PRIMARY KEY,
+                 id NUMBER GENERATED as IDENTITY PRIMARY KEY ,
                  nome VARCHAR2(255) NOT NULL,
                  data_lancamento DATE,
                  plataforma VARCHAR2(50) NOT NULL,

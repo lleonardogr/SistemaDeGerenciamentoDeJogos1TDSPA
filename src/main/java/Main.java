@@ -69,7 +69,7 @@
                                     loop = false;
                                 }
                                 case MENU_JOGO.ADICIONAR_JOGO -> jogoService.AdicionarJogo(colecao);
-                                case MENU_JOGO.REMOVER_JOGO -> jogoService.RemoverJogo(colecao);
+                                case MENU_JOGO.REMOVER_JOGO -> jogoService.RemoverJogo();
                                 case MENU_JOGO.LISTAR_JOGOS -> jogoService.ListarJogos();
                                 case MENU_JOGO.AVALIAR_JOGO -> jogoService.AvaliarJogo(colecao);
                                 case MENU_JOGO.LISTAR_AVALIACOES_JOGO -> jogoService.ListarAvaliacoes(colecao);

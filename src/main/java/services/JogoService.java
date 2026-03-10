@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.lang.IO.println;
@@ -53,23 +54,40 @@ public class JogoService {
         jogo.plataforma = plataforma;
         jogo.dataLancamento = LocalDate.parse(dataLancamento);
 
-        colecao.add(jogo);
+        var sql = "INSERT INTO Jogo (NOME, DATA_LANCAMENTO, PLATAFORMA, MEDIA_AVALIACOES) VALUES " +
+                "(?,?,?,?)";
+        try(var conn = DatabaseConfig.getConnection()){
+            var stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nome);
+            stmt.setDate(2, java.sql.Date.valueOf(dataLancamento));
+            stmt.setString(3, plataforma.name());
+            stmt.setInt(4,0);
+            var rowsAffected = stmt.executeUpdate();
+            logger.info("Jogo inserido com sucesso");
+        }
+        catch (SQLException ex){
+            logger.error("Erro ao adicionar jogo");
+        }
+
         logger.info("Jogo adicionado: {} - Plataforma: {}", nome, plataforma);
         logger.debug("Total de jogos na coleção: {}", colecao.size());
     }
 
-    public void RemoverJogo(List<Conteudo> colecao){
+    public void RemoverJogo(){
         logger.info("Iniciando remoção de jogo");
         println("Digite o numero do jogo a ser removido:");
-        var index = Integer.parseInt(IO.readln());
-        if (index >= 0 && index < colecao.size()) {
-            var jogoRemovido = colecao.get(index);
-            colecao.remove(index);
-            logger.info("Jogo removido: {}", jogoRemovido);
-            logger.debug("Total de jogos restantes: {}", colecao.size());
-        } else {
-            logger.warn("Tentativa de remoção com índice inválido: {}", index);
-            println("Índice inválido!");
+        var id = Integer.parseInt(IO.readln());
+        var sql = "DELETE FROM Jogo WHERE id = ?";
+        try(var conn = DatabaseConfig.getConnection()){
+            var stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            var rowsAffected = stmt.executeUpdate();
+            logger.info(
+                    "Jogo removido - ID: {}, Linhas afetadas: {}",
+                    id, rowsAffected);
+        }
+        catch(SQLException ex){
+            logger.error("Erro ao remover jogo de id: " + id);
         }
     }
 
